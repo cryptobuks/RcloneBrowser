@@ -63,10 +63,13 @@ elseif(APPLE)
   set(SOURCE ${SOURCE} osx_helper.mm)
 endif()
 
-set(RCLONE_BROWSER_VERSION "dev" CACHE STRING "rclone browser version")
-add_definitions(-DRCLONE_BROWSER_VERSION="${RCLONE_BROWSER_VERSION}")
-
 set(QRC resources.qrc)
+
+if(DEFINED ENV{RCLONE_BROWSER_VERSION})
+  add_definitions("-DRCLONE_BROWSER_VERSION=\"$ENV{RCLONE_BROWSER_VERSION}\"")
+else()
+  add_definitions("-DRCLONE_BROWSER_VERSION=\"dev\"")
+endif()
 
 qt5_wrap_ui(UI_OUT ${UI})
 qt5_wrap_cpp(MOC_OUT ${MOC})
@@ -92,4 +95,8 @@ elseif(APPLE)
 else()
   add_executable(rclone-browser ${SOURCE} ${BACKEND} ${OTHER} ${MOC} ${MOC_OUT} ${UI_OUT} ${MOC_OUT} ${QRC_OUT})
   target_link_libraries(rclone-browser Qt5::Widgets)
+
+  install(TARGETS rclone-browser RUNTIME DESTINATION bin)
+  install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/icon.png" DESTINATION "share/pixmaps" RENAME "rclone-browser.png")
+  install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/../scripts/rclone-browser.desktop" DESTINATION "share/applications")
 endif()

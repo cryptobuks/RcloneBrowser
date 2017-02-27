@@ -42,10 +42,6 @@ else()
 
 endif()
 
-if(DEFINED ENV{RCLONE_BROWSER_VERSION})
-  add_definitions("-DRCLONE_BROWSER_VERSION=\"$ENV{RCLONE_BROWSER_VERSION}\"")
-endif()
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${rclone-browser_BINARY_DIR}/build")
 
 add_subdirectory(src)
